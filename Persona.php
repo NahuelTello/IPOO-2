@@ -46,7 +46,7 @@ class Persona{
 
     public function __toString()
     {
-        $str = "Nombre: {$this->getNombre()}\n Apellido: {$this->getApellido()}\n Dni: {$this->getDni()}";
+        $str = "Nombre: {$this->getNombre()}\nApellido: {$this->getApellido()}\nDni: {$this->getDni()}";
         return $str;
     }
 }
