@@ -4,14 +4,14 @@ class Reloj
     //ATRIBUTOS
     private $horas;
     private $minutos;
-    private $segundos;
+    
 
     //METODOS
-    public function __construct($horas, $minutos, $segundos)
+    public function __construct($horas, $minutos)
     {
         $this->horas = $horas;
         $this->minutos = $minutos;
-        $this->segundos = $segundos;
+        
     }
 
     //METODOS GETTERS Y SETTERS

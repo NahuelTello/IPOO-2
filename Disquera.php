@@ -68,8 +68,9 @@ class Disquera{
         $hCerrado = $this->getObjHoraHasta(); //Desde el obj de reloj obtengo la hora de cierre
         $mCerrado = $hCerrado->getMinutos(); //Desde el obj de reloj obtengo los minutos de cierre
         $abierto = false;
+        $estado = $this->getEstado();
 
-        if ( (($hora == $hAbierto) && ($minutos == $mAbierto)) || (($hora == $hCerrado) && ($minutos == $mCerrado))) {
+        if ( (($hora >= $hAbierto) && ($minutos >= $mAbierto)) || (($hora <= $hCerrado) && ($minutos <= $mCerrado)) && ($estado == "abierto") ) {
             $abierto = true;
         } else {
             $abierto = false;
@@ -83,13 +84,12 @@ class Disquera{
     public function abrirDisquera($hora, $minutos){
         $horaAbierto = $this->getObjHoraDesde();
         $minutosAbierto = $horaAbierto->getMinutos();
-        $abierto = false;
+        $estado = $this->getEstado();
+        $nuevoEstado = $this->
         if (( $hora >= $horaAbierto )&&( $minutos>=$minutosAbierto )) {
-            $abierto = true;
-        } else {
-            $bierto = false;
+            $this->setEstado($nuevoEstado);
         }
-        return $abierto;
+        return $nuevoEstado;
     }
 
     public function __toString(){
