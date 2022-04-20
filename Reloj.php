@@ -4,6 +4,7 @@ class Reloj
     //ATRIBUTOS
     private $horas;
     private $minutos;
+    private $segundos;
     
 
     //METODOS
@@ -103,6 +104,6 @@ class Reloj
 
     public function __toString()
     {
-        return "{$this->getHora()}:{$this->getMinutos()}:{$this->getSegundos()}" . "\n";
+        return "{$this->getHora()}:{$this->getMinutos()}";
     }
 }
