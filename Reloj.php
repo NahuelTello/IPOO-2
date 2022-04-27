@@ -102,6 +102,14 @@ class Reloj
         } while ($horas = 24);
     }
 
+    public function agregarCeroStr(){
+        $minutos = $this->getMinutos();
+        $nuevoMinutoStr = "0";
+        if ($minutos >= 0 && $minutos <= 9) {
+            $this->setMinutos($minutos .= $nuevoMinutoStr);
+        }
+    }
+
     public function __toString()
     {
         return "{$this->getHora()}:{$this->getMinutos()}";

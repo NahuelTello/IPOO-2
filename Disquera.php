@@ -4,17 +4,16 @@ class Disquera{
     //Atributos
     private $objHoraDesde; //objetjo Hora
     private $objHoraHasta; //objetjo Hora
-    private $estado; 
+    private $estado = false;
     private $direccion;
     private $objDuenio; //objeto persona
 
-    public function __construct($objHInicio, $objHFin, $dire, $objPersona,$est)
+    public function __construct($objHInicio, $objHFin, $objPersona ,$dire)
     {
-        $this->objHoraDesde = $objHInicio; //Pasar por parametro un objeto
-        $this->objHoraHasta =  $objHFin; //Pasar por parametro un objeto
+        $this->objHoraDesde = $objHInicio; //Pasar por parametro un objeto reloj
+        $this->objHoraHasta =  $objHFin; //Pasar por parametro un objeto reloj
+        $this->objDuenio = $objPersona; //Pasar por parametro un objeto persona
         $this->direccion = $dire;
-        $this->estado = $est;
-        $this->objDuenio = $objPersona; //Pasar por parametro un objeto
     }
 
     public function getObjHoraDesde(){
@@ -61,29 +60,40 @@ class Disquera{
     {
         $objHorario = "{$this->getObjHoraDesde()}Hs - {$this->getObjHoraHasta()}Hs";
         $objDuenio = $this->getObjDuenio();
-        $cadena = "Horario de atención al público\n{$objHorario} \nDueño de la disquera\n{$objDuenio}\nDireccion\n{$this->getDireccion()}";
+        $cadena = "Horario de atención al público {$objHorario} \nDueño de la disquera\n{$objDuenio}\nDireccion - {$this->getDireccion()}";
         return $cadena;
     }
 
     /**
      * Verifica si el horario se encuentra dentro del horario de atencion
-     * @param int $hora, $minutos
+     * @param int $hora
+     * @param int $minutos
      * @return boolean
      */
     public function dentroHorarioAtencion($hora,$minutos){
-        $hAbierto = $this->getObjHoraDesde()->getHora(); //Desde el obj de reloj obtengo la hora de abertura
-        $mAbierto = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de abertura
-        //$hCerrado = $this->getObjHoraHasta()->getHora(); //Desde el obj de reloj obtengo la hora de cierre
-        //$mCerrado = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de cierre
-        $abierto = false;
-        $estado = $this->getEstado();
+        $hDesde = $this->getObjHoraDesde()->getHora(); //Desde el obj de reloj obtengo la hora de abertura
+        $mDesde = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de abertura
+        $horarioDesde = date("{$hDesde}:{$mDesde}",time());
+        mktime($horarioDesde);
+        //date() - Dar formato a la fecha/hora local
+        //echo $horarioDesde."\n";
+        $hHasta = $this->getObjHoraHasta()->getHora(); //Desde el obj de reloj obtengo la hora de cierre
+        $mHasta = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de cierre
+        $horarioHasta = date("{$hHasta}:{$mHasta}", time());
+        //echo $horarioHasta . "\n";
 
-        if ( (($hora >= $hAbierto) && ($minutos >= $mAbierto)) && ($estado == "abierto") ) {
-            $abierto = true; 
+        $comparaHorario = time() + ($horarioDesde * $horarioHasta);
+        //echo $comparaHorario . "\n";
+
+        $nuevoEstado = false;
+
+        if ( $horarioDesde >= $comparaHorario && $horarioHasta < $comparaHorario  ) {
+            $nuevoEstado = true;
+            $this->setEstado($nuevoEstado);
         } else {
-            $abierto = false;
+            $nuevoEstado = false;
         }
-        return $abierto;
+        return $nuevoEstado;
     }
 
     /**
@@ -93,9 +103,9 @@ class Disquera{
         $horaAbierto = $this->getObjHoraDesde()->getHora();
         $minutosAbierto = $this->getObjHoraDesde()->getMinutos();
         $nuevoEstado = $this->getEstado();
-        if (( $hora >= $horaAbierto )&&( $minutos>=$minutosAbierto )  && ($nuevoEstado == "abierto")) {
+        /* if (( $hora >= $horaAbierto )&&( $minutos>=$minutosAbierto )  && ($nuevoEstado == "abierto")) {
             $this->setEstado($nuevoEstado);
-        }
+        } */
         return $nuevoEstado;
     }
 
@@ -106,14 +116,14 @@ class Disquera{
 
         if($hora >= $horaHasta && $minutos >= $minutosHasta){
             $horaValida = true;
-        }else { 
+        } else {
             $horaValida = false;
         }
 
         return $horaValida;
     }
 
-    /* cerrarDisquera($hora,$minutos): que dada una hora y minutos corrobora que se encuentra fuera del 
+    /* cerrarDisquera($hora,$minutos): que dada una hora y minutos corrobora que se encuentra fuera del
     horario de atención y cambia el estado de la disquera solo si es un horario válido para su cierre. */
 
     public function cerrarDisquera($hora, $minutos){
@@ -127,5 +137,5 @@ class Disquera{
         }
     }
 
-    
+
 }
