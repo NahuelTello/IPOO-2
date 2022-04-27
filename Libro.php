@@ -95,13 +95,7 @@ class Libro
     public function __toString()
     {   
         $objAutor = $this->getObjAutor();
-        $str = "Título: {$this->getTitulo()}.
-        \nAño de edición: {$this->getAnioEdicion()}.
-        \nEditorial: {$this->getEditorial()}.
-        \nNombre del autor: {$objAutor->getNombre()} {$objAutor->getApellido()}.
-        \nCantidad de Paginas: {$this->getCantidadPaginas()}.
-        \nSinopsis: {$this->getSinopsis()}
-        \nAños de edicion: {$this->aniosdesdeEdicion()}";
+        $str = "\nTítulo: {$this->getTitulo()}.\nAño de edición: {$this->getAnioEdicion()}.\nEditorial: {$this->getEditorial()}.\nNombre del autor: {$objAutor->getNombre()} {$objAutor->getApellido()}.\nCantidad de Paginas: {$this->getCantidadPaginas()}.\nSinopsis: {$this->getSinopsis()}.\nAños de edicion: {$this->aniosdesdeEdicion()}.";
         return $str;
     }
 
