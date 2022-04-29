@@ -28,32 +28,45 @@ $objLibro4 = new Libro("El caballero de la armadura oxidada", 2010, "Alfaguara",
 $arrayLibros =  [$objLibro1,$objLibro2,$objLibro3,$objLibro4];
 //print_r($arrayLibros);
 
-$objLectura = new Lectura($arrayLibros, 99);
-
-/* 
-    echo "Pagina Actual ({$objLectura->getNumPagina()})\n";
-    echo "Pagina Anterior ({$objLectura->retrocederPagina()})";
-    $objLectura->setNumPagina(99);
-    echo "\nSiguiente página ({$objLectura->siguientePagina()}).\n";
-    echo "A que pagina desea ir? ";
-    $numPag = intval(trim(fgets(STDIN)));
-    echo "Ahora la pagina actual es ({$objLectura->irPagina($numPag)}).\n"; 
-*/
 
 
-if ($objLectura->libroLeido("Moco")) {
+$i = 0;
+while ($i < count($arrayLibros)) {
+    $seleccionarLibro = $arrayLibros[$i];
+    $seleccionarNumPagina = $seleccionarLibro->getCantidadPaginas();
+    $objLectura = new Lectura($arrayLibros, $seleccionarNumPagina);
+    $i++;
+}
+
+echo "---------------------------------------\n";
+echo "Pagina Actual ({$objLectura->getNumPagina()})\n";
+echo "Pagina Anterior ({$objLectura->retrocederPagina()})";
+echo "\nSiguiente página ({$objLectura->siguientePagina()}).\n";
+echo "A que pagina desea ir? ";
+$numPag = intval(trim(fgets(STDIN)));
+echo "Ahora la pagina actual es ({$objLectura->irPagina($numPag)}).\n";
+$objLectura->setNumPagina($numPag);
+echo "---------------------------------------\n";
+
+echo "Ingrese el titulo del libro: ";
+$titulo = trim(fgets(STDIN));
+if ($objLectura->libroLeido($titulo)) {
     echo "Libro Leido\n";
 } else {
     echo "Libro no leido en la coleccion\n";
 }
-$libro = "Mafalda";
+echo "Ingrese el Titulo del Libro: ";
+$libro = trim(fgets(STDIN));
 $sinopsisLibro = $libro;
 echo "Sinopsis del Libro {$libro}: {$objLectura->darSinopsis($sinopsisLibro)}.\n";
-$array =  $objLectura->leidosAnioEdicion(2010);
-
+echo "Ingrese un año de edicion ";
+$anioEdicion = intval(trim(fgets(STDIN)));
+$array =  $objLectura->leidosAnioEdicion($anioEdicion);
 echo "Libros del mismo año de edicion: ".arrayStr($array)."\n";
 
-$arreglo = $objLectura->darLibrosPorAutor("Pablo");
+echo "Ingrese el nombre de un Autor: ";
+$autor = trim(fgets(STDIN));
+$arreglo = $objLectura->darLibrosPorAutor($autor);
 echo "Libro por Autor: ".arrayStr($arreglo)."\n";
 
 //echo $objLectura . "\n";
@@ -66,7 +79,7 @@ function arrayStr($array){
     return $str;
 }
 
-
+echo $objLectura;
 /* 
     Realizar las modificaciones que crea necesaria en la clase implementada en el punto 4 para poder almacenar
     información de los libros que va leyendo una persona. Implementar los siguientes métodos:

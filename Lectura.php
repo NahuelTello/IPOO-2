@@ -50,7 +50,7 @@ class Lectura{
     public function __toString()
     {
         $objLibroStr = $this->librosStr();
-        $str = "\n---------\nLibro{$objLibroStr}\nNúmero de Pagina Leyéndose ({$this->getNumPagina()})";
+        $str = "---------------------------------------\nLibro{$objLibroStr}\nNúmero de Pagina Leyéndose ({$this->getNumPagina()})";
         return $str;
     }
 
