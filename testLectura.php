@@ -14,19 +14,67 @@ require_once("Persona.php");
         f) Redefinir el método _ _toString() para que retorne la información de los atributos de la clase.
         g) Crear un script Test_Lectura que cree un objeto Lectura e invoque a cada uno de los métodos implementados. 
     */
-$objPersona = new Persona("Pablo", "Chavez", 1234567);
-$paginas = 100;
-$objLibro = new Libro("El caballero de la armadura oxidada", 2010, "Alfaguara", $objPersona, $paginas, "Un caballero en busca de la felicidad");
-$objLectura = new Lectura($objLibro, 99);
+$objPersona1 = new Persona("Pablo", "Chavez", 1234567);
+$objPersona2 = new Persona("Juan Manuel", "De Rosas", 1234567);
+$objPersona3 = new Persona("Manuel", "Belgrano", 1234567);
+$objPersona4 = new Persona("Pablo", "Chavez", 1234567);
 
-echo "Pagina Actual ({$objLectura->getNumPagina()})\n";
-echo "Pagina Anterior ({$objLectura->retrocederPagina()})";
-$objLectura->setNumPagina(99);
-echo "\nSiguiente página ({$objLectura->siguientePagina()}).\n";
-echo "A que pagina desea ir? ";
-$numPag = intval(trim(fgets(STDIN)));
-echo "Ahora la pagina actual es ({$objLectura->irPagina($numPag)})!";
 
-echo $objLectura;
+$objLibro1 = new Libro("El caballero de la armadura oxidada", 2010, "Alfaguara", $objPersona1, 150, "Un caballero en busca de la felicidad");
+$objLibro2 = new Libro("Mafalda", 1810, "La bolita", $objPersona2, 30, "Una niña de argentina");
+$objLibro3 = new Libro("Condorito", 1920, "Libros Argentina", $objPersona3, 45, "Un condor de argentina");
+$objLibro4 = new Libro("El caballero de la armadura oxidada", 2010, "Alfaguara", $objPersona1, 150, "Un caballero en busca de la felicidad");
+
+$arrayLibros =  [$objLibro1,$objLibro2,$objLibro3,$objLibro4];
+//print_r($arrayLibros);
+
+$objLectura = new Lectura($arrayLibros, 99);
+
+/* 
+    echo "Pagina Actual ({$objLectura->getNumPagina()})\n";
+    echo "Pagina Anterior ({$objLectura->retrocederPagina()})";
+    $objLectura->setNumPagina(99);
+    echo "\nSiguiente página ({$objLectura->siguientePagina()}).\n";
+    echo "A que pagina desea ir? ";
+    $numPag = intval(trim(fgets(STDIN)));
+    echo "Ahora la pagina actual es ({$objLectura->irPagina($numPag)}).\n"; 
+*/
+
+
+if ($objLectura->libroLeido("Moco")) {
+    echo "Libro Leido\n";
+} else {
+    echo "Libro no leido en la coleccion\n";
+}
+$libro = "Mafalda";
+$sinopsisLibro = $libro;
+echo "Sinopsis del Libro {$libro}: {$objLectura->darSinopsis($sinopsisLibro)}.\n";
+$array =  $objLectura->leidosAnioEdicion(2010);
+
+echo "Libros del mismo año de edicion: ".arrayStr($array)."\n";
+
+$arreglo = $objLectura->darLibrosPorAutor("Pablo");
+echo "Libro por Autor: ".arrayStr($arreglo)."\n";
+
+//echo $objLectura . "\n";
+function arrayStr($array){
+    $str = " ";
+    foreach ($array as $key => $elemento) {
+        $objLibro = $elemento;
+        $str .= $objLibro." ";
+    }
+    return $str;
+}
+
+
+/* 
+    Realizar las modificaciones que crea necesaria en la clase implementada en el punto 4 para poder almacenar
+    información de los libros que va leyendo una persona. Implementar los siguientes métodos:
+        a) libroLeido($titulo): retorna true si el libro cuyo título recibido por parámetro se encuentra dentro del conjunto de libros leídos y false en caso contrario.
+        b) darSinopsis($titulo): retorna la sinopsis del libro cuyo título se recibe por parámetro.
+        c) leidosAnioEdicion($x): que retorne todos aquellos libros que fueron leídos y su año de edición es un año X recibido por parámetro.
+        d) darLibrosPorAutor($nombreAutor): retorna todos aquellos libros que fueron leídos y el nombre de su autor coincide con el recibido por parámetro. 
+*/
+
 
 

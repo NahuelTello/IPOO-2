@@ -4,21 +4,27 @@ include "Reloj.php";
 include "Persona.php";
 
 $objPersona = new Persona("Nahuel", "Tello", "1234567");
-$objHoraDesde = new Reloj(8, 30);
-$objHoraHasta = new Reloj(21, 0);
+$horaApertura = "10:40";
+$horaCierre = "18:30";
+$objDisquera = new Disquera($horaApertura, $horaCierre, "abierto", $objPersona, "Av. Arg 123");
 
-$objDisquera = new Disquera($objHoraDesde, $objHoraHasta, $objPersona, "Av. Arg 123");
-echo "------------\n";
-echo $objDisquera."\n";
-echo "------------\n";
 /* $objDisquera->setEstado("abierto"); */
-$dentroDelHorario = $objDisquera->dentroHorarioAtencion(12,30);
-if ($dentroDelHorario) {
-    echo "Dentro del horario de atencion!\n";
-} else {
-    echo "Fuera del horario";
-}
+echo $objDisquera. "\n";
+echo "ponga la hora a verificar: \n";
+$horitas = trim(fgets(STDIN));
+echo "ponga el minuto a verificar: \n";
+$minutitos = trim(fgets(STDIN));
+echo "estas dentro del horario? \n";
 
+$horarioVerificar = $objDisquera->dentroHorarioAtencion($horitas, $minutitos);
+if ($horarioVerificar) {
+    echo "Está en horario de atencion \n";
+} else {
+    echo "No esta en horario de atencion \n";
+}
+echo "------------\n";
+echo $objDisquera . "\n";
+echo "------------\n";
 /* $objDisquera->setEstado("cerrado");
 if ($objDisquera->abrirDisquera(22, 45)) {
     echo "Disquera abierta!\n";

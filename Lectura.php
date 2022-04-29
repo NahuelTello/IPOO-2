@@ -13,21 +13,22 @@ class Lectura{
         g) Crear un script Test_Lectura que cree un objeto Lectura e invoque a cada uno de los métodos implementados. 
     */
 
-    private $objLibro;
+    private $array_objLibro;
     private $numeroPagina;
+    //private $arrayLibros = [];
 
-    public function __construct($instanciaLibro, $cantPaginas)
+    public function __construct($instanciaLibro, $nPagina)
     {
-        $this->objLibro = $instanciaLibro;
-        $this->numeroPagina = $cantPaginas;
+        $this->array_objLibro = $instanciaLibro;
+        $this->numeroPagina = $nPagina;
     }
 
-    public function getObjLibro(){
-        return $this->objLibro;
+    public function getArrayObjLibro(){
+        return $this->array_objLibro;
     }
 
-    public function setObjLibro($nuevaInstancia){
-        $this->objLibro = $nuevaInstancia;
+    public function setArrayObjLibro($nuevaInstancia){
+        $this->array_objLibro = $nuevaInstancia;
     }
 
     public function getNumPagina(){
@@ -38,21 +39,50 @@ class Lectura{
         $this->numeroPagina = $nuevaPagina;
     }
 
+    /* public function getArrayLibros(){
+        return $this->arrayLibros;
+    }
+
+    public function setArrayLibros($nuevoArray){
+        $this->arrayLibros = $nuevoArray;
+    } */
+
     public function __toString()
     {
-        $objLibroStr = $this->getObjLibro();
-        $str = "\n---------\nLibro{$objLibroStr->__toString()}\nNúmero de Pagina Leyéndose ({$this->getNumPagina()})";
+        $objLibroStr = $this->librosStr();
+        $str = "\n---------\nLibro{$objLibroStr}\nNúmero de Pagina Leyéndose ({$this->getNumPagina()})";
         return $str;
     }
 
+    public function librosStr(){
+        $libroStr = " ";
+        foreach ($this->getArrayObjLibro() as $indice => $elemento) {
+            $objLibro = $elemento;
+            $str = $objLibro->__toString()."\n";
+            $libroStr .= $str;
+        }
+        return $libroStr;
+    }
 
-    private function existePagina($i){
-        $cantTotalPaginas = $this->getObjLibro();
+    private function existePagina($pagina){
+        /**
+         * $cantTotalPaginas = $this->getObjLibro();
+         * $existe = false;
+         * if ($i < $cantTotalPaginas->getCantidadPaginas()  || $cantTotalPaginas->getCantidadPaginas() <= $i ) {   
+         * $existe = true;
+         * } else {
+         * $existe = false;
+         * } */ 
         $existe = false;
-        if ($i < $cantTotalPaginas->getCantidadPaginas()  || $cantTotalPaginas->getCantidadPaginas() <= $i ) {
-            $existe = true;
-        } else {
-            $existe = false;
+        $nuevaColeccion = $this->getArrayObjLibro(); //objLibro es un array con los libros almacenados
+        $i = 0;
+        while ( ($existe) && ( $i < count($nuevaColeccion) ) ) {
+            $seleccionarPagina = $nuevaColeccion[$i];
+            $seleccionarPagina->getCantidadPaginas();
+            if ($pagina < $seleccionarPagina || $seleccionarPagina <= $pagina) {
+                $existe = true;
+            }
+            $i++;
         }
         return $existe;
     }
@@ -101,4 +131,122 @@ class Lectura{
         return $x;
     }
 
+    /* 
+    Realizar las modificaciones que crea necesaria en la clase implementada en el punto 4 para poder almacenar
+    información de los libros que va leyendo una persona. Implementar los siguientes métodos:
+        a) libroLeido($titulo): retorna true si el libro cuyo título recibido por parámetro se encuentra dentro del conjunto de libros leídos y false en caso contrario.
+        b) darSinopsis($titulo): retorna la sinopsis del libro cuyo título se recibe por parámetro.
+        c) leidosAnioEdicion($x): que retorne todos aquellos libros que fueron leídos y su año de edición es un año X recibido por parámetro.
+        d) darLibrosPorAutor($nombreAutor): retorna todos aquellos libros que fueron leídos y el nombre de su autor coincide con el recibido por parámetro. 
+    */
+
+    /**
+     * retorna true si el libro cuyo título recibido por parámetro se encuentra dentro del conjunto de libros leídos y false en caso contrario
+     * @param String $titulo
+     * @return boolean
+     */
+    public function libroLeido($titulo){
+        $leido = false;
+        $nuevaColeccion = $this->getArrayObjLibro();
+        $longArreglo = count($nuevaColeccion);
+        $i = 0;
+        while ((!$leido) && ($i < $longArreglo)) {
+            $seleccionarLibro = $nuevaColeccion[$i];
+            $comparaTitulo = $seleccionarLibro->getTitulo();
+            if ($titulo == $comparaTitulo) {
+                $leido = true;
+            }
+            $i++;
+        }
+        return $leido;
+    }
+
+    /**
+     * retorna la sinopsis del libro cuyo título se recibe por parámetro.
+     * @param String $titulo
+     * @return String
+     */
+    public function darSinopsis($titulo){
+
+        $sinopsis = " ";
+        $encontrado = false;
+        $nuevaColeccion = $this->getArrayObjLibro();
+        $longArreglo = count($nuevaColeccion);
+        $i = 0;
+        while( ( !$encontrado )&&( $i < $longArreglo ) ){
+            $seleccionarLibro = $nuevaColeccion[$i];
+            $comparaTitulo = $seleccionarLibro->getTitulo();
+            if ($this->libroLeido($comparaTitulo)) {
+                if ( $comparaTitulo == $titulo ) {
+                    $sinopsis = $seleccionarLibro->getSinopsis();
+                    $encontrado = true;
+                } 
+            }
+            
+            $i++;
+        }
+
+        return $sinopsis;
+    }
+
+
+    /**
+     * retorna todos aquellos libros que fueron leídos y su año de edición es un año X recibido por parámetro.
+     * @param int $x
+     * @return return array
+    */
+    public function leidosAnioEdicion($x){
+        $encontrado = false;
+        $nuevaColeccion = $this->getArrayObjLibro();
+        $longArreglo = count($nuevaColeccion);
+        $i = 0;
+
+        while ( (!$encontrado) && ($i < $longArreglo) ) {
+            $seleccionarLibro = $nuevaColeccion[$i];
+            $comparaAnioEdicion = $seleccionarLibro->getAnioEdicion();
+            $titulo = $seleccionarLibro->getTitulo();
+            
+            if ($this->libroLeido($titulo)) {
+                if ($comparaAnioEdicion == $x) {
+                    $encontrado = true;
+                    $librosEncontrados = ["Libro" => $titulo ,"Año Edicion" => $comparaAnioEdicion ];
+                }
+            }
+            $i++;
+        }
+
+        return $librosEncontrados;
+    }
+
+    /**
+     * retorna todos aquellos libros que fueron leídos y el nombre de su autor coincide con el recibido por parámetro. 
+     * @param String $nombreAutor
+     * @return array
+     */
+    public function darLibrosPorAutor($nombreAutor){
+        $autorEncontrado = false;
+        $nuevaColeccion = $this->getArrayObjLibro();
+        $longArreglo = count($nuevaColeccion);
+        $i = 0;
+        $autoresEncontrados = [];
+
+        while ( (!$autorEncontrado) && ($i < $longArreglo)) {
+            
+            $seleccionarLibro = $nuevaColeccion[$i];
+            $seleccionarAutor = $seleccionarLibro->getObjAutor();
+            $titulo = $seleccionarLibro->getTitulo();
+            $comparaNombre = $seleccionarAutor->getNombre();
+
+            if ($this->libroLeido($titulo)) {
+                if ($comparaNombre == $nombreAutor) {
+                    $autorEncontrado = true;
+                    $autoresEncontrados = ["Nombre" => $comparaNombre, "Libro" => $titulo];
+                }
+            }
+            
+            $i++;
+        }
+
+        return $autoresEncontrados;
+    }
 }

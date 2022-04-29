@@ -2,34 +2,35 @@
 class Disquera{
 
     //Atributos
-    private $objHoraDesde; //objetjo Hora
-    private $objHoraHasta; //objetjo Hora
-    private $estado = false;
+    private $hora_desde;
+    private $hora_hasta; 
+    private $estado;
     private $direccion;
     private $objDuenio; //objeto persona
 
-    public function __construct($objHInicio, $objHFin, $objPersona ,$dire)
+    public function __construct($h_inicio, $h_fin,$state , $objPersona ,$dire)
     {
-        $this->objHoraDesde = $objHInicio; //Pasar por parametro un objeto reloj
-        $this->objHoraHasta =  $objHFin; //Pasar por parametro un objeto reloj
+        $this->hora_desde = $h_inicio; 
+        $this->hora_hasta =  $h_fin; 
+        $this->estado = $state;
         $this->objDuenio = $objPersona; //Pasar por parametro un objeto persona
         $this->direccion = $dire;
     }
 
-    public function getObjHoraDesde(){
-        return $this->objHoraDesde;
+    public function getHoraDesde(){
+        return $this->hora_desde;
     }
 
-    public function setObjHoraDesde($nuevaHora){
-        $this->objHoraDesde = $nuevaHora;
+    public function setHoraDesde($nuevaHora){
+        $this->hora_desde = $nuevaHora;
     }
 
-    public function getObjHoraHasta(){
-        return $this->objHoraHasta;
+    public function getHoraHasta(){
+        return $this->hora_hasta;
     }
 
-    public function setObjHoraHasta($nuevaHora){
-        $this->objHoraHasta = $nuevaHora;
+    public function setHoraHasta($nuevaHora){
+        $this->hora_hasta = $nuevaHora;
     }
 
     public function getEstado(){
@@ -58,9 +59,9 @@ class Disquera{
 
     public function __toString()
     {
-        $objHorario = "{$this->getObjHoraDesde()}Hs - {$this->getObjHoraHasta()}Hs";
+        $Horario = "{$this->getHoraDesde()}Hs - {$this->getHoraHasta()}Hs";
         $objDuenio = $this->getObjDuenio();
-        $cadena = "Horario de atención al público {$objHorario} \nDueño de la disquera\n{$objDuenio}\nDireccion - {$this->getDireccion()}";
+        $cadena = "Horario de atención al público {$Horario} \nDueño de la disquera\n{$objDuenio}\nDireccion - {$this->getDireccion()}";
         return $cadena;
     }
 
@@ -71,70 +72,46 @@ class Disquera{
      * @return boolean
      */
     public function dentroHorarioAtencion($hora,$minutos){
-        $hDesde = $this->getObjHoraDesde()->getHora(); //Desde el obj de reloj obtengo la hora de abertura
-        $mDesde = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de abertura
-        $horarioDesde = date("{$hDesde}:{$mDesde}",time());
-        mktime($horarioDesde);
-        //date() - Dar formato a la fecha/hora local
-        //echo $horarioDesde."\n";
-        $hHasta = $this->getObjHoraHasta()->getHora(); //Desde el obj de reloj obtengo la hora de cierre
-        $mHasta = $this->getObjHoraDesde()->getMinutos(); //Desde el obj de reloj obtengo los minutos de cierre
-        $horarioHasta = date("{$hHasta}:{$mHasta}", time());
-        //echo $horarioHasta . "\n";
+        $coleccionStrHora = $this->getHoraDesde();
+        $coleccionHorarioAtencion = explode(":",$coleccionStrHora);
+        $horaAtencion = $coleccionHorarioAtencion[0];
+        $minutosAtencion = $coleccionHorarioAtencion[1];
 
-        $comparaHorario = time() + ($horarioDesde * $horarioHasta);
-        //echo $comparaHorario . "\n";
+        $coleccionStrHora2 = $this->getHoraHasta();
+        $coleccionHorarioCierre = explode(":", $coleccionStrHora2);
+        $horaCierre = $coleccionHorarioCierre[0];
+        $minutosCierre = $coleccionHorarioCierre[1];
 
-        $nuevoEstado = false;
-
-        if ( $horarioDesde >= $comparaHorario && $horarioHasta < $comparaHorario  ) {
-            $nuevoEstado = true;
-            $this->setEstado($nuevoEstado);
-        } else {
-            $nuevoEstado = false;
+        $state = false;
+        if ($hora >= $horaAtencion && $hora <= $horaCierre) {
+            if ($minutos <= $minutosCierre || $minutos < $minutosAtencion) {
+                $state = true;
+            }
         }
-        return $nuevoEstado;
+        return $state;
     }
-
+ 
     /**
      * Verifica dado un horario si se encuentra dentro del horario de atencion, cambia el estado de la disquera
      */
     public function abrirDisquera($hora, $minutos){
-        $horaAbierto = $this->getObjHoraDesde()->getHora();
-        $minutosAbierto = $this->getObjHoraDesde()->getMinutos();
-        $nuevoEstado = $this->getEstado();
-        /* if (( $hora >= $horaAbierto )&&( $minutos>=$minutosAbierto )  && ($nuevoEstado == "abierto")) {
-            $this->setEstado($nuevoEstado);
-        } */
-        return $nuevoEstado;
+        $nuevoEstado = $this->dentroHorarioAtencion($hora,$minutos);
+        if ($nuevoEstado) {
+            $this->setEstado("Abierto");
+        } else {
+            $this->setEstado("Cerrado");
+        }
     }
 
     public function validarHorarioCierre($hora, $minutos){
-        $horaHasta = $this->getObjHoraHasta()->getHora();
-        $minutosHasta = $this->getObjHoraHasta()->getMinutos();
-        $horaValida = false;
-
-        if($hora >= $horaHasta && $minutos >= $minutosHasta){
-            $horaValida = true;
-        } else {
-            $horaValida = false;
-        }
-
-        return $horaValida;
+        
     }
 
     /* cerrarDisquera($hora,$minutos): que dada una hora y minutos corrobora que se encuentra fuera del
     horario de atención y cambia el estado de la disquera solo si es un horario válido para su cierre. */
 
     public function cerrarDisquera($hora, $minutos){
-        $horaHasta = $this->getObjHoraHasta()->getHora();
-        $minutosHasta = $this->getObjHoraHasta()->getMinutos();
-        $verificarHorario = $this->validarHorarioCierre($horaHasta, $minutosHasta);
-
-        if ($verificarHorario == $hora && $verificarHorario == $minutos) {
-            $nuevoEstado = "cerrado";
-            $this->setEstado($nuevoEstado);
-        }
+        
     }
 
 
